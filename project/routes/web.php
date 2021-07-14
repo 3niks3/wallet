@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\WalletController;
 
 /*
 |--------------------------------------------------------------------------
@@ -24,6 +25,10 @@ Route::get('/registration',[AuthController::class,'registration'])->name('regist
 Route::post('/registrationAction',[AuthController::class,'registrationAction'])->name('registrationAction');
 Route::post('/loginAction',[AuthController::class,'loginAction'])->name('loginAction');
 
-Route::get('/profile',function(){ dd('here'); })->name('profile');
+Route::get('/wallet',[WalletController::class, 'list'])->name('wallet');
+Route::get('/wallet/create',[WalletController::class, 'create'])->name('walletCreate');
+Route::get('/wallet/update/{wallet}',[WalletController::class, 'update'])->name('walletUpdate');
+Route::post('/wallet/createAction',[WalletController::class, 'createAction'])->name('walletCreateAction');
+Route::post('/wallet/updateAction/{wallet}',[WalletController::class, 'updateAction'])->name('walletUpdateAction');
 
 

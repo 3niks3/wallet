@@ -61,7 +61,7 @@ class AuthController extends Controller
 
         if(Auth::attempt($credentials)) {
             request()->session()->regenerate();
-            return redirect()->route('profile');
+            return redirect()->route('wallet');
         }
 
         return redirect()->route('login')->withErrors(['Incorrect authentication credentials!']);

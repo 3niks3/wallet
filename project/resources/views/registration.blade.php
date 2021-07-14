@@ -84,7 +84,7 @@
                     let messages = response.data.messages || {};
 
                     if (status == true) {
-                        window.location.replace('{{ route('profile') }}');
+                        window.location.replace('{{ route('wallet') }}');
                     }
 
                     $.each(messages, function( field, msg ){
