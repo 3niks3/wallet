@@ -31,10 +31,10 @@
                         </a>
 
                         @if(auth()->check())
-                        <div class="ms-auto">
-                            <i class="fas fa-users"></i>
+                        <div class="ms-auto navbar-brand">
+                            <i class="fas fa-users me-2"></i>
                             {{auth()->user()->name}}
-                            <a href="{{ route('logout') }}" class="btn btn-outline-success">logout</a>
+                            <a href="{{ route('logout') }}" class="btn btn-outline-success ms-2">logout</a>
                         </div>
                         @else
                             <div class="ms-auto">
