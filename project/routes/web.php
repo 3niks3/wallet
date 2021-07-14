@@ -24,5 +24,6 @@ Route::get('/registration',[AuthController::class,'registration'])->name('regist
 Route::post('/registrationAction',[AuthController::class,'registrationAction'])->name('registrationAction');
 Route::post('/loginAction',[AuthController::class,'loginAction'])->name('loginAction');
 
+Route::get('/profile',function(){ dd('here'); })->name('profile');
 
 

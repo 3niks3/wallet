@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
@@ -18,15 +21,20 @@ class AuthController extends Controller
 
     public function logout()
     {
-        dd('logout');
+        Auth::logout();
+
+        request()->session()->invalidate();
+        request()->session()->regenerateToken();
+
+        return redirect('/');
     }
 
     public function registrationAction()
     {
         $validator = \Validator::make(request()->all(), [
             'name' => 'required|min:1|max:255',
-            'surname' => 'nullable|min:1|max:255',
-            'email' => 'required|email|min:3|max:255|unique:users,email',
+            'surname' => 'nullable|max:255',
+            'email' => 'required|email|min:3|max:255|unique:user,email',
             'password' => 'required|min:6|max:32|',
             'password_again' => 'required_with:password|same:password',
         ]);
@@ -35,17 +43,27 @@ class AuthController extends Controller
             return response()->json(['status' => false, 'messages' => $validator->messages()->getMessages()]);
         }
 
-        dd('register and log in ');
+        $user = new User;
+        $user->name = trim(request()->name);
+        $user->surname = trim(request()->surname);
+        $user->email = trim(request()->email);
+        $user->password = Hash::make(request()->password);
+        $user->save();
 
+        Auth::login($user);
 
-
-
-        dd($validator->messages()->getMessages());
-        dd('registrationAction');
+        return response()->json(['status' => true, 'messages' => []]);
     }
 
     public function loginAction()
     {
-        dd('loginAction');
+        $credentials = request()->only('email', 'password');
+
+        if(Auth::attempt($credentials)) {
+            request()->session()->regenerate();
+            return redirect()->route('profile');
+        }
+
+        return redirect()->route('login')->withErrors(['Incorrect authentication credentials!']);
     }
 }
