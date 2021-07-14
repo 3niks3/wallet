@@ -1,0 +1,59 @@
+version: '3.7'
+networks:
+  app-network:
+    driver: bridge
+services:
+    webserver:
+        container_name: webserver
+        build:
+          context: ./docker/nginx
+          dockerfile: Dockerfile
+        working_dir: /var/www/html
+        volumes:
+          - './project:/var/www/html'
+          - './docker/nginx/hosts.conf:/etc/nginx/conf.d/hosts.conf'
+        ports:
+          - '8000:8000'
+        expose:
+          - 8000
+        depends_on:
+          - box
+          - mysql
+        networks:
+          - app-network
+    box:
+        container_name: box
+        build:
+            context: ./docker/php_8.0
+            dockerfile: Dockerfile                    
+        working_dir: /var/www/html
+        volumes:
+            - './project:/var/www/html'
+            - './docker/php_8.0/local.ini:/usr/local/etc/php/conf.d/local.ini'
+        depends_on:
+            - mysql
+        networks: 
+            - app-network
+    mysql:
+        container_name: mysql
+        restart: always
+        build:
+            context: ./docker/mysql
+            dockerfile: Dockerfile
+        ports:
+          - '3306:3306'
+        expose:
+          - 3306
+        volumes:
+          - "mysql-wallet-data:/var/lib/mysql"
+        environment:
+            MYSQL_DATABASE: wallet
+            MYSQL_ROOT_PASSWORD: secret
+        networks:
+          - app-network
+volumes:
+  mysql-wallet-data: null
+
+
+            
+        
