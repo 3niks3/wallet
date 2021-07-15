@@ -3,7 +3,9 @@
 @section('content')
     <div class="row align-items-center">
         <div class="col-12 col-md-6">
-            <h1 class="card-title mt-3 ">My Wallets</h1>
+            <h1 class="card-title mt-3 ">
+                <a href="{{ route('wallet') }}" class="link-dark">Wallet "{{ $wallet->name }}"</a>
+            </h1>
         </div>
         <div class="col-12 col-md-6">
             <a href="{{ route('transactionCreate', $wallet->id) }}" class="btn btn-outline-success btn-lg float-md-end mt-2">
