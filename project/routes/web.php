@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\TransactionController;
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\HomeController;
@@ -31,6 +32,13 @@ Route::get('/wallet/update/{wallet}',[WalletController::class, 'update'])->name(
 Route::post('/wallet/createAction',[WalletController::class, 'createAction'])->name('walletCreateAction');
 Route::post('/wallet/updateAction/{wallet}',[WalletController::class, 'updateAction'])->name('walletUpdateAction');
 Route::get('/wallet/delete/{wallet}',[WalletController::class, 'deleteAction'])->name('walletDeleteAction');
+
+Route::get('/wallet/{wallet}/transactions',[TransactionController::class, 'list'])->name('transactionList');
+Route::get('/wallet/{wallet}/transactions/create',[TransactionController::class, 'create'])->name('transactionCreate');
+Route::get('/wallet/{wallet}/transactions/{transaction}/fraud',[TransactionController::class, 'markAsFraudAction'])->name('transactionFraud');
+Route::get('/wallet/{wallet}/transactions/{transaction}/delete',[TransactionController::class, 'deleteAction'])->name('transactionDelete');
+Route::post('/wallet/{wallet}/transactions/createAction',[TransactionController::class, 'createAction'])->name('transactionCreateAction');
+
 
 
 
