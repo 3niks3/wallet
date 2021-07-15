@@ -3,19 +3,31 @@
 namespace App\Http\Middleware;
 
 use Illuminate\Auth\Middleware\Authenticate as Middleware;
+use Closure;
 
 class Authenticate extends Middleware
 {
-    /**
-     * Get the path the user should be redirected to when they are not authenticated.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return string|null
-     */
-    protected function redirectTo($request)
+
+    public function handle($request, Closure $next, ...$guards)
     {
-        if (! $request->expectsJson()) {
-            return route('login');
+        $allowed = false;
+        $default_guard = config('auth.defaults.guard');
+        $guards = empty($guards)?[$default_guard]:$guards;
+
+        foreach($guards as $guard)
+        {
+            if(auth()->guard($guard)->check()) {
+                $allowed = true;
+                break;
+            }
         }
+
+        if(!$allowed)
+        {
+            \Alert::error('Access Restricted!')->flash();
+            return redirect()->route('home');
+        }
+
+        return $next($request);
     }
 }
