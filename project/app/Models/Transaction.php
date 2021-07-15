@@ -15,6 +15,14 @@ class Transaction extends Model
     public $timestamps = true;
     protected $guarded = ['id'];
 
+    /****************
+     * Relationships
+     ****************/
+
+    public function wallet()
+    {
+        return $this->hasOne(Wallet::class, 'id', 'wallet_id');
+    }
 
     /****************
      * Accessors
@@ -22,5 +30,22 @@ class Transaction extends Model
     public function getAmountNumberFormatAttribute()
     {
         return number_format( ($this->amount/100), 2);
+    }
+
+    /****************
+     * Functions
+     ****************/
+
+    public function updateWalletBalance()
+    {
+        $wallet = $this->wallet;
+
+        $wallet->amount = $wallet->calculateTransactionsAmount();
+        $wallet->save();
+    }
+
+    public static function formatAmount($amount)
+    {
+        return floor($amount *100);
     }
 }

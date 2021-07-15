@@ -5,7 +5,7 @@
         <div class="card mt-5 text-center offset-md-3 col-12 col-md-6">
             <div class="card-body">
                 <h1 class="card-title">Create Wallet</h1>
-                <form action="{{ route('transactionCreateAction', $wallet->id) }}" method="post" id="walletCreateUpdateForm">
+                <form action="{{ route('transactionCreateAction', $wallet->id) }}" method="post" id="transactionCreate">
 
                     <div class="row mb-3">
                         <div class="col-auto">
@@ -48,37 +48,37 @@
 
 @push('scripts')
     <script>
-    {{--    $('form#walletCreateUpdateForm').submit(function(e){--}}
-    {{--        e.preventDefault();--}}
+        $('form#transactionCreate').submit(function(e){
+            e.preventDefault();
 
-    {{--        //clean last errors--}}
-    {{--        $(this).find('ul.form-errors').html('')--}}
+            //clean last errors
+            $(this).find('ul.form-errors').html('')
 
-    {{--        //get form parameters--}}
-    {{--        let form = $(this)--}}
-    {{--        let target = $(this).attr('action');--}}
-    {{--        let form_data = new FormData(this);--}}
+            //get form parameters
+            let form = $(this)
+            let target = $(this).attr('action');
+            let form_data = new FormData(this);
 
-    {{--        //send post--}}
-    {{--        axios.post(target, form_data)--}}
-    {{--            .then(function (response) {--}}
+            //send post
+            axios.post(target, form_data)
+                .then(function (response) {
 
-    {{--                let status = response.data.status || false;--}}
-    {{--                let messages = response.data.messages || {};--}}
+                    let status = response.data.status || false;
+                    let messages = response.data.messages || {};
 
-    {{--                if (status == true) {--}}
-    {{--                    window.location.replace('{{ route('wallet') }}');--}}
-    {{--                }--}}
+                    if (status == true) {
+                        window.location.replace('{{ route('transactionList',$wallet->id) }}');
+                    }
 
-    {{--                console.log(messages);--}}
+                    console.log(messages);
 
-    {{--                $.each(messages, function( index, msg ){--}}
-    {{--                    form.find('ul.form-errors').append('<li class="list-group-item list-group-item-danger">'+msg+'</li>')--}}
-    {{--                });--}}
-    {{--            })--}}
-    {{--            .catch(function (error) {--}}
-    {{--                console.log(error);--}}
-    {{--            });--}}
-    {{--    });--}}
-    {{--</script>--}}
+                    $.each(messages, function( index, msg ){
+                        form.find('ul.form-errors').append('<li class="list-group-item list-group-item-danger">'+msg+'</li>')
+                    });
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+        });
+    </script>
 @endpush

@@ -23,4 +23,29 @@ class Wallet extends Model
     {
         return $this->hasMany(Transaction::class, 'wallet_id', 'id');
     }
+
+    /****************
+     * Accessors
+     ****************/
+    public function getAmountNumberFormatAttribute()
+    {
+        return number_format( ($this->amount/100), 2,'.','');
+    }
+
+    public function getAmountDecimalAttribute()
+    {
+        return round($this->amount /100,2);
+    }
+
+    /****************
+     * Functions
+     ****************/
+
+    public function calculateTransactionsAmount()
+    {
+        $incoming = $this->transactions()->where('type','in')->sum('amount');
+        $outgoing = $this->transactions()->where('type','out')->sum('amount');
+
+        return $incoming - $outgoing;
+    }
 }
