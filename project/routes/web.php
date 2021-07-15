@@ -31,16 +31,33 @@ Route::group(['middleware' =>'guest:web'],function() {
 Route::group(['middleware'=>['auth:web']],function(){
     Route::get('/wallet',[WalletController::class, 'list'])->name('wallet');
     Route::get('/wallet/create',[WalletController::class, 'create'])->name('walletCreate');
-    Route::get('/wallet/update/{wallet}',[WalletController::class, 'update'])->name('walletUpdate');
-    Route::post('/wallet/createAction',[WalletController::class, 'createAction'])->name('walletCreateAction');
-    Route::post('/wallet/updateAction/{wallet}',[WalletController::class, 'updateAction'])->name('walletUpdateAction');
-    Route::get('/wallet/delete/{wallet}',[WalletController::class, 'deleteAction'])->name('walletDeleteAction');
 
-    Route::get('/wallet/{wallet}/transactions',[TransactionController::class, 'list'])->name('transactionList');
-    Route::get('/wallet/{wallet}/transactions/create',[TransactionController::class, 'create'])->name('transactionCreate');
-    Route::get('/wallet/{wallet}/transactions/{transaction}/fraud',[TransactionController::class, 'markAsFraudAction'])->name('transactionFraud');
-    Route::get('/wallet/{wallet}/transactions/{transaction}/delete',[TransactionController::class, 'deleteAction'])->name('transactionDelete');
-    Route::post('/wallet/{wallet}/transactions/createAction',[TransactionController::class, 'createAction'])->name('transactionCreateAction');
+
+    Route::post('/wallet/createAction',[WalletController::class, 'createAction'])->name('walletCreateAction');
+
+
+
+    //middle where check if user owns wallet
+    Route::group(['middleware'=>['can:access,App\Models\Wallet,wallet']],function(){
+
+        Route::get('/wallet/{wallet}/transactions',[TransactionController::class, 'list'])->name('transactionList');
+        Route::get('/wallet/{wallet}/update',[WalletController::class, 'update'])->name('walletUpdate');
+        Route::get('/wallet/{wallet}/delete',[WalletController::class, 'deleteAction'])->name('walletDeleteAction');
+        Route::post('/wallet/{wallet}/updateAction',[WalletController::class, 'updateAction'])->name('walletUpdateAction');
+
+        Route::get('/wallet/{wallet}/transactions/create',[TransactionController::class, 'create'])->name('transactionCreate');
+        Route::post('/wallet/{wallet}/transactions/createAction',[TransactionController::class, 'createAction'])->name('transactionCreateAction');
+
+        Route::group(['middleware'=>['can:access,App\Models\Transaction,transaction,wallet']],function(){
+            Route::get('/wallet/{wallet}/transactions/{transaction}/fraud',[TransactionController::class, 'markAsFraudAction'])->name('transactionFraud');
+            Route::get('/wallet/{wallet}/transactions/{transaction}/delete',[TransactionController::class, 'deleteAction'])->name('transactionDelete');
+        });
+
+    });
+
+
+
+
 });
 
 
