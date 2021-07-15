@@ -7,6 +7,17 @@
                 <h1 class="card-title">Create Wallet</h1>
                 <form action="{{ route('transactionCreateAction', $wallet->id) }}" method="post" id="transactionCreate">
 
+                    <div class="row mt-3">
+                        <div class="col text-start">
+                            <figcaption class="blockquote-footer">
+                                Maximum transfer amount 5000.00
+                            </figcaption>
+                            <figcaption class="blockquote-footer">
+                                Maximum outGoing amount {{ min(5000,$wallet->amount_decimal) }}
+                            </figcaption>
+                        </div>
+                    </div>
+
                     <div class="row mb-3">
                         <div class="col-auto">
                             <label>Transaction type</label>
