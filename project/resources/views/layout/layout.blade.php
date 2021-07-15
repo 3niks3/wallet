@@ -81,5 +81,17 @@
 
     @stack('scripts')
 
+    @foreach (Alert::getMessages() as $type => $messages)
+        @foreach ($messages as $message)
+            <script>
+                console.log(Noty)
+                new Noty({
+                    type: "{{$type}}",
+                    text: '{{$message}}',
+                }).show();
+            </script>
+        @endforeach
+    @endforeach
+
     </body>
 </html>

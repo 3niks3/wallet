@@ -30,5 +30,7 @@ Route::get('/wallet/create',[WalletController::class, 'create'])->name('walletCr
 Route::get('/wallet/update/{wallet}',[WalletController::class, 'update'])->name('walletUpdate');
 Route::post('/wallet/createAction',[WalletController::class, 'createAction'])->name('walletCreateAction');
 Route::post('/wallet/updateAction/{wallet}',[WalletController::class, 'updateAction'])->name('walletUpdateAction');
+Route::get('/wallet/delete/{wallet}',[WalletController::class, 'deleteAction'])->name('walletDeleteAction');
+
 
 

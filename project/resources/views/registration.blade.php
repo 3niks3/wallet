@@ -70,7 +70,7 @@
 
             //clean last errors
             $(this).find('input,select').removeClass('is-invalid');
-            $(this).find('div.invalid-feedback').html('');
+            $(this).find('div.invalid-feedback').text('');
 
             //get form parameters
             let target = $(this).attr('action');

@@ -17,57 +17,34 @@
         <div class="card mt-3 col">
             <div class="card-body">
 
+                @if($wallets->isEmpty())
+                    <div class="col text-center">
+                        <h3 class="mb-4">You dont have any Wallets</h3>
+                    </div>
+                @endif
+
                 <div class="row row-cols-1 row-cols-md-3 g-4">
 
-                    <div class="col">
-                        <div class="card">
-                            <div class="card-body">
-                                <h5 class="card-title">Card title</h5>
-                                <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-                                <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
-                            </div>
-                        </div>
-                    </div>
+                    @foreach($wallets as $wallet)
 
-                    <div class="col">
-                        <div class="card">
-                            <div class="card-body">
-                                <h5 class="card-title">Card title</h5>
-                                <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-                                <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+                        <div class="col">
+                            <div class="card">
+                                <div class="card-header bg-transparent">
+                                    <a href="#" class="link-primary">
+                                        <h5 class="card-title"> {{ $wallet->name }} </h5>
+                                    </a>
+                                </div>
+                                <div class="card-body">
+                                    <p class="card-text"><strong>Wallet balance: </strong> {{ $wallet->amount }}</p>
+                                </div>
+                                <div class="card-footer text-muted">
+                                    <a href="{{ route('walletUpdate', $wallet->id) }}" class="btn btn-primary">Edit</a>
+                                    <a href="{{ route('walletDeleteAction',  $wallet->id) }}" class="btn btn-danger float-end">Delete</a>
+                                </div>
                             </div>
                         </div>
-                    </div>
 
-                    <div class="col">
-                        <div class="card">
-                            <div class="card-body">
-                                <h5 class="card-title">Card title</h5>
-                                <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-                                <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col">
-                        <div class="card">
-                            <div class="card-body">
-                                <h5 class="card-title">Card title</h5>
-                                <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-                                <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col">
-                        <div class="card">
-                            <div class="card-body">
-                                <h5 class="card-title">Card title</h5>
-                                <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-                                <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
-                            </div>
-                        </div>
-                    </div>
+                    @endforeach
 
                 </div>
 
