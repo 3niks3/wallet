@@ -14,4 +14,13 @@ class Wallet extends Model
 
     public $timestamps = true;
     protected $guarded = ['id'];
+
+    /****************
+     * Relationships
+     ****************/
+
+    public function transactions()
+    {
+        return $this->hasMany(Transaction::class, 'wallet_id', 'id');
+    }
 }

@@ -14,4 +14,13 @@ class Transaction extends Model
 
     public $timestamps = true;
     protected $guarded = ['id'];
+
+
+    /****************
+     * Accessors
+     ****************/
+    public function getAmountNumberFormatAttribute()
+    {
+        return number_format( ($this->amount/100), 2);
+    }
 }

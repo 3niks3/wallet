@@ -30,7 +30,7 @@
                         <div class="col">
                             <div class="card">
                                 <div class="card-header bg-transparent">
-                                    <a href="#" class="link-primary">
+                                    <a href="{{ route('transactionList', $wallet->id) }}" class="link-primary">
                                         <h5 class="card-title"> {{ $wallet->name }} </h5>
                                     </a>
                                 </div>
