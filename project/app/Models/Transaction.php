@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Service\Format;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -29,7 +30,7 @@ class Transaction extends Model
      ****************/
     public function getAmountNumberFormatAttribute()
     {
-        return number_format( ($this->amount/100), 2);
+        return Format::formatMoneyNumber($this->amount);
     }
 
     /****************
@@ -40,12 +41,7 @@ class Transaction extends Model
     {
         $wallet = $this->wallet;
 
-        $wallet->amount = $wallet->calculateTransactionsAmount();
+        $wallet->amount = $wallet->total_balance_amount;
         $wallet->save();
-    }
-
-    public static function formatAmount($amount)
-    {
-        return floor($amount *100);
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Service\Format;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -29,12 +30,27 @@ class Wallet extends Model
      ****************/
     public function getAmountNumberFormatAttribute()
     {
-        return number_format( ($this->amount/100), 2,'.','');
+        return Format::formatMoneyNumber($this->amount);
     }
 
     public function getAmountDecimalAttribute()
     {
-        return round($this->amount /100,2);
+        return Format::formatMoney($this->amount);
+    }
+
+    public function getTotalIncomingAmountAttribute()
+    {
+        return $this->transactions()->where('type','in')->sum('amount');
+    }
+
+    public function getTotalOutgoingAmountAttribute()
+    {
+        return $this->transactions()->where('type','out')->sum('amount');
+    }
+
+    public function getTotalBalanceAmountAttribute()
+    {
+        return $this->total_incoming_amount - $this->total_outgoing_amount;
     }
 
     /****************

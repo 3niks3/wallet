@@ -12,19 +12,40 @@
             </a>
         </div>
     </div>
-    <div class="row">
 
+    <div class="row">
+        <div class="card mt-3 col">
+            <div class="card-body">
+                <table class="table table-bordered text-center">
+                    <thead class="">
+                    <tr>
+                        <th scope="col">Total Balance</th>
+                        <th scope="col">Total incoming</th>
+                        <th scope="col">Total Outgoing</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>{{ Format::formatMoneyNumber($wallet->total_balance_amount) }}</td>
+                        <td>{{ Format::formatMoneyNumber($wallet->total_incoming_amount) }}</td>
+                        <td class="font-weight-bold">{{ Format::formatMoneyNumber($wallet->total_outgoing_amount) }}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="row">
         <div class="card mt-3 col">
             <div class="card-body">
 
-                @if($transactions->isEmpty())
-                    <div class="col text-center">
-                        <h3 class="mb-4">You dont have any Wallets</h3>
-                    </div>
-                @endif
+                <div class="col">
+                    <h3 class="mb-4">Transactions</h3>
+                </div>
 
                 <div class="row row-cols-1 row-cols-md-3 g-4">
-
                     <table class="table table-striped">
                         <thead>
                             <tr>
@@ -36,31 +57,43 @@
                             </tr>
                         </thead>
                         <tbody>
-                        @foreach($transactions as $transaction)
-                            <tr class="{{ ($transaction->fraud) ? 'table-warning' : '' }}">
-                                <td>{{ $transaction->id }}</td>
-                                <td>
-                                    <span class="{{ ($transaction->type == 'in') ? 'text-success' : 'text-danger' }}">
-                                        <span> {{ ($transaction->type == 'in') ? '+' : '-' }}</span>
-                                        <span>{{ $transaction->amount_number_format }}</span>
-                                    </span>
-                                </td>
-                                <td>{{ ($transaction->fraud == 1)?'Yes':'No'  }}</td>
-                                <td>{{ $transaction->created_at }}</td>
-                                <td class="text-end" style="width:1%;white-space: nowrap;">
-                                    <a href="#" class="btn btn-warning">Mark as fraud</a>
-                                    <a href="#" class="btn btn-danger">Delete</a>
-                                </td>
-                            </tr>
 
-                        @endforeach
+                            @if($transactions->isEmpty())
+                                <tr>
+                                    <td colspan="5" class="text-center">Wallet do not have any transaction</td>
+                                </tr>
+                            @endif
+
+                            @foreach($transactions as $transaction)
+                                <tr class="{{ ($transaction->fraud) ? 'table-warning' : '' }}">
+                                    <td>{{ $transaction->id }}</td>
+                                    <td>
+                                        <span class="{{ ($transaction->type == 'in') ? 'text-success' : 'text-danger' }}">
+                                            <span> {{ ($transaction->type == 'in') ? '+' : '-' }}</span>
+                                            <span>{{ $transaction->amount_number_format }}</span>
+                                        </span>
+                                    </td>
+                                    <td>{{ ($transaction->fraud == 1)?'Yes':'No'  }}</td>
+                                    <td>{{ $transaction->created_at }}</td>
+                                    <td class="text-end" style="width:1%;white-space: nowrap;">
+
+                                        <a href="{{ route('transactionFraud', [$wallet->id, $transaction->id]) }}" class="btn btn-warning">{{ ( $transaction->fraud == 1)?'Remove from fraud':'Add to fraud' }}</a>
+
+                                        @if($lastTransaction->id ==  $transaction->id)
+                                            <a href="{{ route('transactionDelete', [$wallet->id, $transaction->id]) }}" class="btn btn-danger delete-transaction">Delete</a>
+                                        @endif
+                                    </td>
+                                </tr>
+
+                            @endforeach
                         </tbody>
                     </table>
-                    @foreach($transactions as $transaction)
+                </div>
 
-
-                    @endforeach
-
+                <div class="row ">
+                    <div class="col">
+                        {!! $transactions->links() !!}
+                    </div>
                 </div>
 
             </div>
@@ -70,8 +103,8 @@
 
 @push('scripts')
     <script>
-        $('a.delete-wallet').click(function(e){
-            if(!confirm('Are You sure you want to delete wallet')) {
+        $('a.delete-transaction').click(function(e){
+            if(!confirm('Are You sure you want to delete Transaction')) {
                 return false;
             }
         })

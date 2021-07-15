@@ -35,7 +35,9 @@
                                     </a>
                                 </div>
                                 <div class="card-body">
-                                    <p class="card-text"><strong>Wallet balance: </strong> {{ $wallet->amount }}</p>
+                                    <p class="card-text"><strong>Wallet balance: </strong> {{ Format::formatMoneyNumber($wallet->amount) }}</p>
+                                    <p class="card-text"><strong>Incoming balance: </strong> {{ Format::formatMoneyNumber($wallet->total_incoming_amount) }}</p>
+                                    <p class="card-text"><strong>Outgoing balance: </strong> {{ Format::formatMoneyNumber($wallet->total_outgoing_amount) }}</p>
                                 </div>
                                 <div class="card-footer text-muted">
                                     <a href="{{ route('walletUpdate', $wallet->id) }}" class="btn btn-primary">Edit</a>

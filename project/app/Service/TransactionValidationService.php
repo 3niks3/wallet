@@ -56,7 +56,7 @@ class TransactionValidationService
             'amount' => $rules,
         ]);
 
-        $amount = Transaction::formatAmount($this->data['amount']);
+        $amount = Format::formatFormMoney($this->data['amount']);
         $failedManually = false;
 
         if($amount > $this->wallet->amount) {
