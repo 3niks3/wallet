@@ -41,7 +41,7 @@ class TransactionValidationService
     {
         $rules = $this->generalValidationRules;
 
-        $validator = \Validator::make(request()->all(), [
+        $validator = \Validator::make($this->data, [
             'amount' => $rules,
         ]);
 
@@ -52,7 +52,7 @@ class TransactionValidationService
     {
         $rules = $this->generalValidationRules;
 
-        $validator = \Validator::make(request()->all(), [
+        $validator = \Validator::make($this->data, [
             'amount' => $rules,
         ]);
 

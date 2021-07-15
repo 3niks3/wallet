@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Service\UserValidationService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -31,16 +32,11 @@ class AuthController extends Controller
 
     public function registrationAction()
     {
-        $validator = \Validator::make(request()->all(), [
-            'name' => 'required|min:1|max:255',
-            'surname' => 'nullable|max:255',
-            'email' => 'required|email|min:3|max:255|unique:user,email',
-            'password' => 'required|min:6|max:32|',
-            'password_again' => 'required_with:password|same:password',
-        ]);
+        $validation = new UserValidationService(request()->all());
+        $validationResults = $validation->validate();
 
-        if($validator->fails()) {
-            return response()->json(['status' => false, 'messages' => $validator->messages()->getMessages()]);
+        if(!$validationResults['status']) {
+            return response()->json($validationResults);
         }
 
         $user = new User;

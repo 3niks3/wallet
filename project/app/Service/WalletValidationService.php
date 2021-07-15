@@ -42,7 +42,7 @@ class WalletValidationService
         $rules = $this->generalValidationRules;
         $rules[] = Rule::unique('wallet','name')->where('user_id', $this->user->id);
 
-        $validator = \Validator::make(request()->all(), [
+        $validator = \Validator::make($this->data, [
             'name' => $rules,
         ]);
 
@@ -54,7 +54,7 @@ class WalletValidationService
         $rules = $this->generalValidationRules;
         $rules[] = Rule::unique('wallet','name')->where('user_id', $this->user->id)->ignore($this->wallet);
 
-        $validator = \Validator::make(request()->all(), [
+        $validator = \Validator::make($this->data, [
             'name' => $rules,
         ]);
 
