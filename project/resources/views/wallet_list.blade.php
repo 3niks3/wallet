@@ -39,7 +39,7 @@
                                 </div>
                                 <div class="card-footer text-muted">
                                     <a href="{{ route('walletUpdate', $wallet->id) }}" class="btn btn-primary">Edit</a>
-                                    <a href="{{ route('walletDeleteAction',  $wallet->id) }}" class="btn btn-danger float-end">Delete</a>
+                                    <a href="{{ route('walletDeleteAction',  $wallet->id) }}" class="btn btn-danger float-end delete-wallet">Delete</a>
                                 </div>
                             </div>
                         </div>
@@ -52,3 +52,13 @@
         </div>
     </div>
 @endsection
+
+@push('scripts')
+    <script>
+        $('a.delete-wallet').click(function(e){
+            if(!confirm('Are You sure you want to delete wallet')) {
+                return false;
+            }
+        })
+    </script>
+@endpush
