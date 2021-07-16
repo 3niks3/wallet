@@ -63,12 +63,6 @@ in negative values
     - User can see total incoming and total outgoing amount in wallet
     - this information will be show in transaction list and also in list where user wallets list are shown
 
-
-
-
-
-
-
 ## Seeded database user info
 1. Seeding database there will be 2 user, each user will have 2 wallets and
 each wallet will have 4 trasnactions
