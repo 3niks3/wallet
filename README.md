@@ -1,6 +1,6 @@
-# Currency Exchange
+# Virtual Wallet
 
-## Used
+## Task description
 1. Symfony framework
 2. Postgres SQL database
 3. Doctrine ORM

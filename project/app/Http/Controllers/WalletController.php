@@ -14,9 +14,7 @@ class WalletController extends Controller
     public function list()
     {
         $wallets = auth()->user()->wallets;
-
         return view('wallet_list', ['wallets' => $wallets]);
-        dd('wallet list');
     }
 
     public function create()
@@ -24,25 +22,37 @@ class WalletController extends Controller
         $formUrl = route('walletCreateAction');
         $wallet = new Wallet();
         $button = ['name' => 'Create', 'value' => 'create'];
+        $formTitle = 'Create Wallet';
 
-        return view('wallet_create_update', ['formUrl' => $formUrl, 'wallet' => $wallet, 'button' => $button]);
+        return view('wallet_create_update', [
+            'formUrl' => $formUrl,
+            'wallet' => $wallet,
+            'button' => $button,
+            'formTitle' => $formTitle
+        ]);
     }
 
     public function update(Wallet $wallet)
     {
         $formUrl = route('walletUpdateAction',$wallet->id);
         $button = ['name' => 'Update', 'value' => 'update'];
+        $formTitle = 'Update Wallet';
 
-        return view('wallet_create_update', ['formUrl' => $formUrl, 'wallet' => $wallet, 'button' => $button]);
+        return view('wallet_create_update', [
+            'formUrl' => $formUrl,
+            'wallet' => $wallet,
+            'button' => $button,
+            'formTitle' => $formTitle
+        ]);
     }
 
     public function createAction()
     {
-
         $user = auth()->user();
+
         //validate
         $validation = new WalletValidationService(request()->all(), 'create', $user);
-        $validationResults = $validation->validate();
+        $validationResults = $validation->validate()->getResponse(true);
 
         //return errors
         if(!$validationResults['status']) {
@@ -64,9 +74,10 @@ class WalletController extends Controller
     public function updateAction(Wallet $wallet)
     {
         $user = auth()->user();
+
         //validate
         $validation = new WalletValidationService(request()->all(), 'update', $user, $wallet);
-        $validationResults = $validation->validate();
+        $validationResults = $validation->validate()->getResponse(true);
 
         //return errors
         if(!$validationResults['status']) {

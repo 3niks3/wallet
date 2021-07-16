@@ -33,7 +33,7 @@ class AuthController extends Controller
     public function registrationAction()
     {
         $validation = new UserValidationService(request()->all());
-        $validationResults = $validation->validate();
+        $validationResults = $validation->validate()->getResponse();
 
         if(!$validationResults['status']) {
             return response()->json($validationResults);

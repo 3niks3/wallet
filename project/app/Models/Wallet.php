@@ -53,6 +53,13 @@ class Wallet extends Model
         return $this->total_incoming_amount - $this->total_outgoing_amount;
     }
 
+    public function getMaxAvailableOutgoingAmountAttribute()
+    {
+        $maxTransferAmount = \App\Service\TransactionValidationService::MAX_TRANSFER_AMOUNT;
+
+        return min($maxTransferAmount, $this->amount);
+    }
+
     /****************
      * Functions
      ****************/
@@ -63,5 +70,11 @@ class Wallet extends Model
         $outgoing = $this->transactions()->where('type','out')->sum('amount');
 
         return $incoming - $outgoing;
+    }
+
+    public function updateBalance()
+    {
+        $this->amount =  $this->total_balance_amount;
+        $this->save();
     }
 }

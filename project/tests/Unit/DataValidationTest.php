@@ -4,6 +4,7 @@ namespace Tests\Unit;
 
 use App\Models\User;
 use App\Models\Wallet;
+use App\Service\Format;
 use App\Service\TransactionValidationService;
 use App\Service\UserValidationService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -28,7 +29,7 @@ class DataValidationTest extends TestCase
         ];
 
         $validation = new UserValidationService($data);
-        $validationResults = $validation->validate();
+        $validationResults = $validation->validate()->getResponse();
 
         $results = $validationResults['status'];
 
@@ -42,10 +43,11 @@ class DataValidationTest extends TestCase
         //transfer amount 100.00
 
         $wallet = Wallet::factory()->make(['user_id' => null, 'amount' => 10000]);
-        $data = ['amount' => '100', 'type' => 'out'];
+        $data = ['amount' => Format::formatFormMoney('100'), 'type' => 'out'];
+
 
         $validation = new TransactionValidationService($data, $wallet);
-        $validationResults = $validation->validate();
+        $validationResults = $validation->validate()->getResponse();
 
         $status = $validationResults['status'];
 

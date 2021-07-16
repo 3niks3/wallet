@@ -16,6 +16,10 @@ class Format
 
     public static function formatFormMoney($amount)
     {
+        if(!is_numeric($amount)) {
+            return null;
+        }
+
         return floor($amount * 100);
     }
 }

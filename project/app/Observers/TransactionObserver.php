@@ -14,7 +14,7 @@ class TransactionObserver
      */
     public function created(Transaction $transaction)
     {
-        $transaction->updateWalletBalance();
+        $transaction->wallet->updateBalance();
     }
 
     /**
@@ -25,7 +25,7 @@ class TransactionObserver
      */
     public function updated(Transaction $transaction)
     {
-        $transaction->updateWalletBalance();
+        $transaction->wallet->updateBalance();
     }
 
     /**
@@ -36,7 +36,7 @@ class TransactionObserver
      */
     public function deleted(Transaction $transaction)
     {
-        $transaction->updateWalletBalance();
+        $transaction->wallet->updateBalance();
     }
 
     /**
@@ -47,7 +47,7 @@ class TransactionObserver
      */
     public function restored(Transaction $transaction)
     {
-        $transaction->updateWalletBalance();
+        $transaction->wallet->updateBalance();
     }
 
     /**
@@ -58,6 +58,6 @@ class TransactionObserver
      */
     public function forceDeleted(Transaction $transaction)
     {
-        $transaction->updateWalletBalance();
+        $transaction->wallet->updateBalance();
     }
 }

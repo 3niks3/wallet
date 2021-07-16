@@ -7,12 +7,15 @@ use Illuminate\Validation\Rule;
 class UserValidationService
 {
     public $data;
-    public $generalValidationRules;
+    public $rules;
+
+    public $fails = false;
+    public $errors = [];
 
     public function __construct($data)
     {
         $this->data = $data;
-        $this->generalValidationRules = [
+        $this->rules = [
             'name' => 'required|min:1|max:255',
             'surname' => 'nullable|max:255',
             'email' => 'required|email|min:3|max:255|unique:user,email',
@@ -23,14 +26,24 @@ class UserValidationService
 
     public function validate()
     {
-        $rules = $this->generalValidationRules;
+        $rules = $this->rules;
         $validator = \Validator::make($this->data, $rules);
 
-        if($validator->fails()) {
-            return ['status' => false, 'messages' => $validator->messages()->getMessages()] ;
+        $this->fails = $validator->fails();
+        $this->errors = $validator->messages()->getMessages();
+
+        return $this;
+    }
+
+    public function getResponse($messageFlat = false)
+    {
+        $messages = $this->errors;
+
+        if($messageFlat) {
+            $messages = Arr::flatten($messages);
         }
 
-        return ['status' => true, 'messages' => [] ];
+        return ['status' => !$this->fails, 'messages' => $messages];
     }
 
 }

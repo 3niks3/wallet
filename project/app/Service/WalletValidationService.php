@@ -10,15 +10,20 @@ class WalletValidationService
     public $action;
     public $user;
     public $wallet;
-    public $generalValidationRules = ['required','max:50'];
+    public $rules;
 
-    public function __construct($data, $action, $user, $wallet = null, $additionalRules = [])
+    public $fails = false;
+    public $errors = [];
+
+    public function __construct($data, $action, $user, $wallet = null)
     {
         $this->data = $data;
         $this->action = $action;
         $this->user = $user;
         $this->wallet = $wallet;
-        $this->generalValidationRules = array_merge($this->generalValidationRules, $additionalRules);
+        $this->rules =  [
+            'name' => ['required','max:50']
+        ];
     }
 
     public function validate()
@@ -32,43 +37,47 @@ class WalletValidationService
                 return $this->validateUpdateWallet();
                 break;
             default:
-                return ['status' => false, 'messages' => ['Action are incorrect']];
+                $this->fails = true;
+                $this->errors = ['Action are incorrect'];
+                return $this;
                 break;
         }
     }
 
     private function validateCreateWallet()
     {
-        $rules = $this->generalValidationRules;
-        $rules[] = Rule::unique('wallet','name')->where('user_id', $this->user->id);
+        $rules = $this->rules;
+        $rules['name'][] = Rule::unique('wallet','name')->where('user_id', $this->user->id);
 
-        $validator = \Validator::make($this->data, [
-            'name' => $rules,
-        ]);
+        $validator = \Validator::make($this->data,$rules);
 
-       return $this->formatResponse($validator);
+        $this->fails = $validator->fails();
+        $this->errors = $validator->messages()->getMessages();
+
+        return $this;
     }
 
     private function validateUpdateWallet()
     {
-        $rules = $this->generalValidationRules;
-        $rules[] = Rule::unique('wallet','name')->where('user_id', $this->user->id)->ignore($this->wallet);
+        $rules = $this->rules;
+        $rules['name'][] = Rule::unique('wallet','name')->where('user_id', $this->user->id)->ignore($this->wallet);
 
-        $validator = \Validator::make($this->data, [
-            'name' => $rules,
-        ]);
+        $validator = \Validator::make($this->data, $rules);
 
-        return $this->formatResponse($validator);
+        $this->fails = $validator->fails();
+        $this->errors = $validator->messages()->getMessages();
+
+        return $this;
     }
 
-    private function formatResponse($validator)
+    public function getResponse($messageFlat = false)
     {
-        $messages = Arr::flatten($validator->messages()->getMessages());
+        $messages = $this->errors;
 
-        if($validator->fails()) {
-            return ['status' => false, 'messages' => $messages] ;
+        if($messageFlat) {
+            $messages = Arr::flatten($messages);
         }
 
-        return ['status' => true, 'messages' => [] ];
+        return ['status' => !$this->fails, 'messages' => $messages];
     }
 }

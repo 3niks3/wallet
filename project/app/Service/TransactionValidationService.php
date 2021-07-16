@@ -8,14 +8,23 @@ use Illuminate\Validation\Rule;
 
 class TransactionValidationService
 {
+    Const MAX_TRANSFER_AMOUNT = 500000;//amount in cents
+
     public $data;
     public $wallet;
-    public $generalValidationRules = ['required', 'numeric','max:5000', 'gt:0'];
+    public $rules;
+
+    public $fails = false;
+    public $errors = [];
 
     public function __construct($data, $wallet = null)
     {
         $this->data = $data;
         $this->wallet = $wallet;
+
+        $this->rules = [
+            'amount' => ['required', 'numeric','max:'.self::MAX_TRANSFER_AMOUNT, 'gt:0']
+        ];
     }
 
     public function validate()
@@ -23,7 +32,9 @@ class TransactionValidationService
         switch(true)
         {
             case(empty($this->data['type']??null) || !in_array($this->data['type'],['in', 'out'])):
-                return ['status' => false, 'messages' => ['Incorrect transaction type']];
+                $this->fails = true;
+                $this->errors = ['Incorrect transaction type'];
+                return $this;
                 break;
             case($this->data['type'] == 'in'):
                 return $this->validateIncomingTransaction();
@@ -32,47 +43,51 @@ class TransactionValidationService
                 return $this->validateOutgoingTransaction();
                 break;
             default:
-                return ['status' => false, 'messages' => ['Unknown transaction type']];
+                $this->fails = true;
+                $this->errors = ['Unknown transaction type'];
+                return $this;
                 break;
         }
     }
 
     private function validateIncomingTransaction()
     {
-        $rules = $this->generalValidationRules;
+        $rules = $this->rules;
 
-        $validator = \Validator::make($this->data, [
-            'amount' => $rules,
-        ]);
+        $validator = \Validator::make($this->data, $rules);
 
-       return $this->formatResponse($validator);
+        $this->fails = $validator->fails();
+        $this->errors = $validator->messages()->getMessages();
+
+        return $this;
     }
 
     private function validateOutgoingTransaction()
     {
-        $rules = $this->generalValidationRules;
+        $rules = $this->rules;
 
-        $validator = \Validator::make($this->data, [
-            'amount' => $rules,
-        ]);
+        $validator = \Validator::make($this->data,$rules);
 
-        $amount = Format::formatFormMoney($this->data['amount']);
-        $failedManually = false;
+        $this->fails = $validator->fails();
+        $this->errors = $validator->messages()->getMessages();
 
-        if($amount > $this->wallet->amount) {
-            $failedManually = true;
-            $validator->messages()->add('amount','Outgoing transaction amount can not be more then amount in wallet ('.$this->wallet->amount_number_format.')');
+
+        if($this->data['amount'] > $this->wallet->amount) {
+            $this->fails = true;
+            $this->errors['amount'] = 'Outgoing transaction amount can not be more then amount in wallet ('.$this->wallet->amount_number_format.')';
         }
 
-        return $this->formatResponse($validator, $failedManually);
+        return $this;
     }
 
-    private function formatResponse($validator, $failedManually = false)
+    public function getResponse($messageFlat = false)
     {
-        if($failedManually || $validator->fails() ) {
-            return ['status' => false, 'messages' => $validator->messages()->getMessages()] ;
+        $messages = $this->errors;
+
+        if($messageFlat) {
+            $messages = Arr::flatten($messages);
         }
 
-        return ['status' => true, 'messages' => [] ];
+        return ['status' => !$this->fails, 'messages' => $messages];
     }
 }

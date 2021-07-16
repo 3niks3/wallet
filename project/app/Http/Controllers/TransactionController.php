@@ -29,16 +29,22 @@ class TransactionController extends Controller
 
     public function createAction(Wallet $wallet)
     {
-        $validation = new TransactionValidationService(request()->all(), $wallet);
-        $validationResults = $validation->validate();
+        //convert data
+        $amount = request()->amount ?? null;
+        $amount = Format::formatFormMoney($amount);
+
+        $data = [];
+        $data['type'] = request()->type ?? null;
+        $data['amount'] = $amount;
+
+        //validate data
+        $validation = new TransactionValidationService($data, $wallet);
+        $validationResults = $validation->validate()->getResponse(true);
 
         //return errors
         if(!$validationResults['status']) {
             return response()->json($validationResults);
         }
-
-        //convert amount in cents
-        $amount = Format::formatFormMoney(request()->amount);
 
         //create transaction
         $transaction = new Transaction();

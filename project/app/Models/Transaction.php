@@ -36,12 +36,5 @@ class Transaction extends Model
     /****************
      * Functions
      ****************/
-
-    public function updateWalletBalance()
-    {
-        $wallet = $this->wallet;
-
-        $wallet->amount = $wallet->total_balance_amount;
-        $wallet->save();
-    }
+    
 }

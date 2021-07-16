@@ -4,7 +4,7 @@
     <div class="row">
         <div class="card mt-5 text-center offset-md-3 col-12 col-md-6">
             <div class="card-body">
-                <h1 class="card-title">Create Wallet</h1>
+                <h1 class="card-title">{{ $formTitle }}</h1>
                 <form action="{{ $formUrl }}" method="post" id="walletCreateUpdateForm">
 
                     <div class="form-floating mb-3">

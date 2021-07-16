@@ -4,16 +4,16 @@
     <div class="row">
         <div class="card mt-5 text-center offset-md-3 col-12 col-md-6">
             <div class="card-body">
-                <h1 class="card-title">Create Wallet</h1>
+                <h1 class="card-title">Create Transaction</h1>
                 <form action="{{ route('transactionCreateAction', $wallet->id) }}" method="post" id="transactionCreate">
 
                     <div class="row mt-3">
                         <div class="col text-start">
                             <figcaption class="blockquote-footer">
-                                Maximum transfer amount 5000.00
+                                Maximum transfer amount {{ Format::formatMoneyNumber(App\Service\TransactionValidationService::MAX_TRANSFER_AMOUNT) }}
                             </figcaption>
                             <figcaption class="blockquote-footer">
-                                Maximum outGoing amount {{ min(5000,$wallet->amount_decimal) }}
+                                Maximum Outgoing amount {{ Format::formatMoneyNumber($wallet->max_available_outgoing_amount) }}
                             </figcaption>
                         </div>
                     </div>
