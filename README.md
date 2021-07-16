@@ -2,7 +2,7 @@
 
 ## Setup guide
 1. Clone this reposotory.
-2. Copy `.env.example` as `.env` (change db configs if needed, but everything should be working by default)
+2. In `project` folder copy `.env.example` as `.env` (change db configs if needed, but everything should be working by default)
 3. Build project `docker-compose build` from folder where `docker-compose.yaml` is located
 4. Run Docker containers `docker-compose up -d`
 5. install all dependencies (Composer) `docker exec box composer install`,
@@ -38,7 +38,7 @@ in negative values
 4. As a User, I can create a virtual Wallet.
     - user can create multiple virtual wallets (each wallet should have unique name from other user wallets)
 5. As a User, I can view a list of my virtual Wallet.
-    - There is display list of uer virtual wallets
+    - There is display list of user virtual wallets
 6. As a User, I can rename my virtual Wallet.
     - user can edit virtual wallet information (rename wallet, name should be unique for other user wallets )
 7. As a User, I can delete a virtual Wallet.
@@ -56,7 +56,7 @@ in negative values
     - this restriction are made to prevent wallet to go in negative values
 11. As a User, I can mark Transaction as Fraudulent.
     - User can mark transaction as Fraud
-    - Only visually transactions are display differently in list, no calculation changes are applay for fround transactions
+    - Only visually fraud transactions are display differently in list, no calculation changes are apply for fraud transactions
     - User can make transaction as fraud and also unmark them
 12. As a User, I see the total sum of Transactions in a virtual Wallet separated
     into incoming and outgoing transactions.
